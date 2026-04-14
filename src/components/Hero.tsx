@@ -3,27 +3,42 @@ import { useGSAP } from "@gsap/react";
 import SplitType from "split-type";
 import videoHero from '../assets/videoHero.mp4';
 import imgHero from '../assets/imgHero.png';
-
+import { useRef } from "react";
 
 
 const Hero = () => {
 
+
+    const videoRef = useRef(null);
+
     const text = new SplitType(".bodyUp p:nth-of-type(1)", { types: 'words,chars' });
 
         useGSAP(() => {
-            const tl = gsap.timeline({ defaults: { ease: "power2.out" } });
-            tl.from(".will-fade", { opacity: 0, y: 20, stagger: 0.3 })
-                .from(text.chars, { opacity: 0, y: 50, stagger: 0.05 }, "-=1")
-                .from(".bodyUp p:nth-of-type(2)", { opacity: 0, y: 20 }, "-=1")
-                .from(".bodyUp p:nth-of-type(3)", { opacity: 0, y: 20 }, "-=0.8")
+            const tl = gsap.timeline({ defaults: { ease: "power2.out", delay: 0.3, duration: 1 } });
+            tl.from(".will-fade", { opacity: 0, x: -120, stagger: 0.3 })
+                .from(text.chars, { opacity: 0, y: -50, stagger: 0.05 }, "-=1")
+                .from(".bodyUp p:nth-of-type(1)", { opacity: 0, y: -120 }, "-=1")
+                .from(".bodyUp p:nth-of-type(2)", { opacity: 0, x: 120 }, "-=1")
+                .from(".bodyUp p:nth-of-type(3)", { opacity: 0, y: 90 }, "-=0.8")
                 .from(".bodyUp p:nth-of-type(4)", { opacity: 0, y: 20 }, "-=0.8")
                 .from(".bodyDown .content", { opacity: 0, y: 30, stagger: 0.3 }, "-=1");
-        });
+
+            const outtl = gsap.timeline({ 
+                scrollTrigger: {
+                    trigger: "#elements",
+                    start: "top top",
+                    end: "bottom top",
+                    scrub: true, 
+
+                }});
+
+        }, []);
 
 
     return (
     <>
         <section id="hero" className="mx-auto w-full">
+            <div id="elements">
             <h2 className="will-fade z-50">¿Estás aprovechando todo el potencial digital de tu negocio?</h2>
             <p className="name">Mandarina Projects</p>
             <div className="centroHero">
@@ -61,9 +76,10 @@ const Hero = () => {
             </div>
             </div>
         </div>
+        </div>
         <div className="video">
-            <video src={videoHero}
-                autoPlay
+            <video ref={videoRef}
+                src={videoHero}
                 playsInline 
                 muted 
                 preload="auto"
