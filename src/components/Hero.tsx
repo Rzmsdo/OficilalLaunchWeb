@@ -1,37 +1,72 @@
 import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import SplitType from "split-type";
 import videoHero from '../assets/videoHero.mp4';
 import imgHero from '../assets/imgHero.png';
 import { useRef } from "react";
 
+gsap.registerPlugin(ScrollTrigger);
+
 
 const Hero = () => {
 
 
-    const videoRef = useRef(null);
-
-    const text = new SplitType(".bodyUp p:nth-of-type(1)", { types: 'words,chars' });
+    const videoRef = useRef<HTMLVideoElement>(null);
 
         useGSAP(() => {
-            const tl = gsap.timeline({ defaults: { ease: "power2.out", delay: 0.3, duration: 1 } });
-            tl.from(".will-fade", { opacity: 0, x: -120, stagger: 0.3 })
-                .from(text.chars, { opacity: 0, y: -50, stagger: 0.05 }, "-=1")
-                .from(".bodyUp p:nth-of-type(1)", { opacity: 0, y: -120 }, "-=1")
-                .from(".bodyUp p:nth-of-type(2)", { opacity: 0, x: 120 }, "-=1")
-                .from(".bodyUp p:nth-of-type(3)", { opacity: 0, y: 90 }, "-=0.8")
-                .from(".bodyUp p:nth-of-type(4)", { opacity: 0, y: 20 }, "-=0.8")
-                .from(".bodyDown .content", { opacity: 0, y: 30, stagger: 0.3 }, "-=1");
+            const text = new SplitType(".bodyUp p:nth-of-type(1)", { types: 'words,chars' });
 
-            const outtl = gsap.timeline({ 
-                scrollTrigger: {
-                    trigger: "#elements",
-                    start: "top top",
-                    end: "bottom top",
-                    scrub: true, 
+            // Animaciones Hero
+            gsap.set(".will-fade", { opacity: 0, x: -120 });
+            gsap.set("p.name", { opacity: 0 });
+            gsap.set(text.chars, { opacity: 0, y: -50 });
+            gsap.set(".bodyUp p:nth-of-type(2)", { opacity: 0, x: 120 });
+            gsap.set(".bodyUp p:nth-of-type(3)", { opacity: 0, y: 90 });
+            gsap.set(".bodyDown .content", { opacity: 0, y: 30 });
 
-                }});
+            const tl = gsap.timeline({ defaults: { ease: "power2.out", duration: 1 } });
+            tl.to(".will-fade", { opacity: 1, x: 0, stagger: 0.5, delay: 0.3 })
+                .to(text.chars, { opacity: 1, y: 0, stagger: 0.04 }, "-=1")
+                .to(".bodyUp p:nth-of-type(1)", { opacity: 1, y: 0 }, "-=1")
+                .to(".bodyUp p:nth-of-type(2)", { opacity: 1, x: 0 }, "-=1")
+                .to(".bodyUp p:nth-of-type(3)", { opacity: 1, y: 0 }, "-=0.8")
+                .to(".bodyDown .content", { opacity: 1, y: 0, stagger: 0.4 }, "-=1");
 
+            const video = videoRef.current;
+            if (video) {
+                video.onloadedmetadata = () => {
+                    const exitTime = 1.5;
+                    const totalTime = exitTime + video.duration;
+                    const exitRatio = exitTime / totalTime;
+
+                    const exitTl = gsap.timeline({
+                        scrollTrigger: {
+                            trigger: "#hero",
+                            start: "top top",
+                            end: `+=${totalTime * 200}`,
+                            pin: true,
+                            anticipatePin: 1,
+                            scrub: true,
+                            onUpdate: (self) => {
+                                const videoProgress = Math.max(0, (self.progress - exitRatio) / (1 - exitRatio));
+                                video.currentTime = videoProgress * video.duration;
+                            },
+                        }
+                    });
+
+                    // Salida en dirección inversa a la entrada
+                    exitTl
+                        .fromTo(".will-fade",       { opacity: 1, x: 0 },    { opacity: 0, x: -120, duration: 1 }, 0)
+                        .fromTo("p.name",            { opacity: 1 },          { opacity: 0, duration: 1.5 }, 0)
+                        .fromTo(".bodyUp p:nth-of-type(1)", { opacity: 1, y: 0 }, { opacity: 0, y: -120, duration: 1.5 }, 0.2)
+                        .fromTo(".bodyUp p:nth-of-type(2)", { opacity: 1, x: 0 }, { opacity: 0, x: 120, duration: 1.5 }, 0.4)
+                        .fromTo(".bodyUp p:nth-of-type(3)", { opacity: 1, y: 0 }, { opacity: 0, y: 90, duration: 1.5 }, 0.6)
+                        .fromTo(".bodyDown .content", { opacity: 1, y: 0 },   { opacity: 0, y: 30, stagger: 0.15, duration: 1.5 }, 0.8)
+                        // Placeholder que ocupa la fase del video en el timeline
+                        .to({}, { duration: video.duration }, exitTime);
+                };
+            }
         }, []);
 
 
