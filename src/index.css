@@ -1,3 +1,10 @@
+/* Bloqueo de scroll compatible con iOS Safari */
+body.scroll-locked {
+  position: fixed;
+  width: 100%;
+  overflow-y: scroll;
+}
+
 @import "tailwindcss";
 
 .navbar {
@@ -5,21 +12,21 @@
   top: 0;
   left: 0;
   right: 0;
-  z-index: 100;
+  z-index: 9999;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 1rem 2rem;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
 .navbar-logo {
   font-weight: 700;
   font-size: 1.2rem;
-  color: var(--text-h);
+  color: #ffffff;
   text-decoration: none;
 }
 
@@ -32,7 +39,7 @@
 }
 
 .navbar-links a {
-  color: var(--text);
+  color: rgba(255,255,255,0.85);
   text-decoration: none;
   font-size: 0.95rem;
   transition: color 0.2s;
@@ -57,7 +64,7 @@
   display: block;
   width: 24px;
   height: 2px;
-  background: var(--text-h);
+  background: #ffffff;
   border-radius: 2px;
   transition: background 0.2s;
 }
@@ -69,14 +76,16 @@
 
   .navbar-links {
     display: none;
-    position: absolute;
-    top: 100%;
+    position: fixed;
+    top: 64px;
     left: 0;
     right: 0;
     flex-direction: column;
     gap: 0;
-    background: var(--bg);
-    border-bottom: 1px solid var(--border);
+    background: rgba(0,0,0,0.92);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
     padding: 0.5rem 0;
   }
 
@@ -91,6 +100,7 @@
   .navbar-links a {
     display: block;
     padding: 0.75rem 2rem;
+    color: rgba(255,255,255,0.85);
   }
 }
 
@@ -115,8 +125,8 @@
     rgba(0, 0, 0, 0.1) 0 10px 15px -3px,
     rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
 
-  --sans: 'Roboto', system-ui, sans-serif;
-  --heading: 'Montserrat', system-ui, sans-serif;
+  --sans: 'Poppins', system-ui, sans-serif;
+  --heading: 'Poppins', system-ui, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
 
   font: 18px/145% var(--sans);
@@ -252,92 +262,89 @@ code {
     @apply flex justify-center items-start;
 }
 
- #hero {
-        @apply relative z-10 min-h-dvh w-full overflow-hidden px-4 pt-24 pb-10 sm:px-6 sm:pt-28 sm:pb-12 lg:px-8 lg:pt-32 lg:pb-16;
+#hero {
+    @apply relative z-10 flex flex-col h-dvh w-full px-5 pt-[64px] pb-6 sm:px-8 sm:pt-[68px] lg:min-h-0 lg:h-[56.25vw] lg:max-h-screen lg:px-12 lg:pt-[68px] lg:pb-8;
+    overflow: hidden;
 }
 
-#hero h2 {
-    @apply relative z-10 mx-auto mb-4 max-w-5xl px-2 text-center font-bold text-2xl leading-tight text-white sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl;
-    text-shadow: 0 2px 20px rgba(0,0,0,0.7);
+#hero #elements {
+    @apply flex flex-col flex-1 justify-start pt-5 sm:pt-6;
 }
 
+/* Badge pill */
 #hero .name {
-    @apply relative z-10 mx-auto mb-6 max-w-5xl px-2 text-center text-3xl font-black tracking-wide text-yellow-400 sm:mb-8 sm:text-4xl md:text-5xl lg:text-6xl;
-    text-shadow: 0 4px 24px rgba(0,0,0,0.8), 0 0 40px rgba(242,140,40,0.4);
+    @apply relative z-10 mx-auto mb-3 block w-fit rounded-full border border-orange-400/30 bg-orange-500/10 px-5 py-2 text-xs font-bold uppercase tracking-[0.2em] text-orange-300;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 0 30px rgba(242,140,40,0.12), inset 0 1px 0 rgba(255,255,255,0.06);
+    text-shadow: none;
+}
+
+/* Main headline */
+#hero h2 {
+    @apply relative z-10 mx-auto mb-5 max-w-4xl px-2 text-center font-semibold text-white;
+    font-size: clamp(1.3rem, 2.5vw, 2.6rem);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    text-shadow: 0 4px 50px rgba(0,0,0,0.55);
 }
 
 #hero .centroHero {
-    @apply relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-6 sm:gap-8 lg:flex-row lg:items-center lg:gap-12;
+    @apply relative z-10 mx-auto flex w-full max-w-6xl flex-1 flex-col items-center justify-between gap-4 lg:flex-row lg:items-center lg:flex-none lg:gap-8;
 }
 
 #hero .bloqHeIzda {
-    @apply flex w-full max-w-xs items-center justify-center sm:max-w-sm md:max-w-md lg:w-[40%] lg:max-w-none;
+    @apply flex w-full flex-1 max-w-sm shrink-0 items-center justify-center sm:max-w-md md:max-w-lg lg:flex-none lg:w-2/5 lg:max-w-none;
 }
 
 #hero .heroImage {
-    @apply block w-full max-h-70 rounded-3xl object-cover sm:max-h-90 md:max-h-110 lg:max-h-130;
-    filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.35));
+    @apply block w-full rounded-3xl object-cover h-full;
+    max-height: clamp(140px, 28vw, 380px);
+    filter: drop-shadow(0 24px 60px rgba(0,0,0,0.55)) drop-shadow(0 0 40px rgba(242,140,40,0.1));
+    border: 1px solid rgba(255,255,255,0.07);
+    outline: 1px solid rgba(242,140,40,0.18);
+    outline-offset: 7px;
 }
 
 #hero .bloqHeDcha {
-    @apply flex w-full lg:w-[60%] items-center justify-center;
+    @apply flex min-w-0 w-full lg:flex-1 items-center justify-center lg:justify-start;
 }
 
 #hero .bodyUp {
-    @apply relative z-10 flex w-full max-w-3xl flex-col gap-3 px-1 text-center sm:gap-4 sm:px-2 lg:px-4 lg:text-left;
+    @apply relative z-10 flex w-full min-w-0 max-w-xl flex-col gap-3 sm:gap-4 px-1 text-center lg:max-w-none lg:text-left;
 }
 
+/* Hook subheadline */
 #hero .bodyUp p:nth-of-type(1) {
-    @apply text-center text-xl font-semibold text-yellow-400 sm:text-2xl lg:text-left lg:text-4xl;
-    text-shadow: 2px 10px 10px rgba(46, 46, 46, 0.829);
+    @apply text-center font-bold text-white lg:text-left;
+    font-size: clamp(1.1rem, 1.6vw, 1.5rem);
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.4);
 }
 
+/* Supporting copy */
 #hero .bodyUp p:nth-of-type(2) {
-    @apply text-center text-sm font-medium text-gray-200 sm:text-base lg:text-left lg:text-lg;
-    text-shadow: 1px 1px 6px rgba(0,0,0,0.8);
+    @apply text-center text-sm sm:text-base lg:text-left lg:text-lg;
+    color: rgba(255,255,255,0.58);
+    line-height: 1.8;
+    font-weight: 400;
+    text-shadow: none;
 }
 
+/* Bold tagline */
 #hero .bodyUp p:nth-of-type(3) {
-    @apply text-base text-gray-300 font-semibold sm:text-lg lg:text-left lg:text-xl;
-    text-shadow: 1px 1px 6px rgba(0,0,0,0.8);
+    @apply text-center text-base font-semibold sm:text-lg lg:text-left;
+    color: #F28C28;
+    letter-spacing: -0.01em;
+    text-shadow: 0 0 30px rgba(242,140,40,0.4);
 }
 
-#hero .bodyDown {
-    @apply relative z-10 mx-auto mt-8 w-full max-w-7xl px-2 sm:mt-10 sm:px-4 lg:mt-12 lg:px-6;
-}
-
-#hero .bodyDown .content {
-    @apply mx-auto flex w-full flex-col items-center justify-center gap-5 text-center sm:gap-6 lg:flex-row lg:items-stretch lg:justify-between;
-    text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
-}
-
-#hero .bodyDown .content > div:first-child {
-    @apply hidden lg:flex lg:w-[32%] lg:flex-col lg:justify-center lg:self-start;
-}
-
-#hero .bodyDown .content > div:last-child {
-    @apply flex w-full max-w-md flex-col justify-center self-center sm:max-w-xl lg:w-[40%] lg:max-w-2xl lg:self-end;
-}
-
-#hero .bodyDown .content p:nth-of-type(2) {
-    @apply max-w-xl text-center text-2xl text-yellow-400 sm:text-3xl lg:text-4xl;
-}
-
-#hero .bodyDown .content p:last-of-type {
-    @apply text-center;
-}
-
-#hero .sas {
-    @apply mx-auto flex w-full max-w-md flex-col justify-center space-y-3 text-base text-center sm:max-w-xl sm:space-y-4 sm:text-lg lg:mx-0 lg:max-w-2xl lg:space-y-6 lg:text-2xl;
-    text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
-}
-
-#hero .sas p:nth-of-type(2) {
-    @apply mx-auto max-w-xl text-center text-2xl text-yellow-400 sm:text-3xl lg:text-4xl;
-}
-
-#hero .sas p:last-of-type {
-    @apply text-center;
+@media (min-width: 1024px) {
+    #hero .bodyUp p:nth-of-type(3) {
+        border-left: 2px solid rgba(242,140,40,0.5);
+        padding-left: 1rem;
+    }
 }
 
 #hero .video {
@@ -346,7 +353,7 @@ code {
 
 #hero .video::after {
     content: '';
-    @apply absolute inset-0 bg-linear-to-b from-black/60 via-black/30 to-black/70;
+    @apply absolute inset-0 bg-linear-to-b from-black/65 via-black/35 to-black/75;
 }
 
 #hero .video video {
