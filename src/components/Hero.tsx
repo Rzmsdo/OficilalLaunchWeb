@@ -17,10 +17,18 @@ const Hero = () => {
         <section id="hero" className="container mx-auto h-full pt-20">
             <h2 className="will-fade z-50">¿Estás aprovechando todo el potencial digital de tu negocio?</h2>
             <div className='bodyUp'>
-                <p>Mandarina Projects</p>
+                <div className="izq">
+                <p>En Mandarina, transformamos tu visión en realidad digital.</p>
+                <p>Desarrollamos soluciones tecnológicas personalizadas que impulsan tu negocio al siguiente nivel.</p>
+                <p>Desde sitios web impactantes hasta plataformas SaaS innovadoras, creamos experiencias digitales que conectan con tus clientes y maximizan tus resultados.</p>
+                <p>Confía en nosotros para construir la tecnología que hará crecer tu empresa.</p>
+                </div>
+                <div className="dcha">
+                <p>Desarrollo de apps a medida para empresas y startups</p>
                 <p>Soluciones digitales diseñadas para crecer contigo.</p>
                 <p>Ofrecemos desde el desarrollo de sitios web hasta plataformas SaaS, optimización SEO y creación de productos digitales.</p>
                 <p>Construimos tecnología que impulsa tu negocio.</p>
+                </div>
             </div>
             <div className="bodyDown">
             <div className="content">
