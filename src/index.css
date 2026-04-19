@@ -248,6 +248,9 @@ code {
     @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2;
 }
 
+@utility flex-top {
+    @apply flex justify-center items-start;
+}
 
  #hero {
         @apply relative z-10 min-h-dvh w-full overflow-hidden px-4 pt-24 pb-10 sm:px-6 sm:pt-28 sm:pb-12 lg:px-8 lg:pt-32 lg:pb-16;
@@ -358,7 +361,7 @@ code {
         @apply flex-center flex-col min-h-dvh p-5 mt-20 relative radial-gradient;
 
         h2 {
-            @apply relative md:text-[10vw] text-8xl text-nowrap leading-none text-center text-[#505050] mb-8;
+            @apply relative flex-top md:text-[4vw] text-6xl text-nowrap leading-none  text-[#505050] mb-8 lg:text-[8vw] ;
         }
 
         .content {
