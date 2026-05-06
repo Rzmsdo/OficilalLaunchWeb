@@ -14,6 +14,7 @@ const Hero = () => {
 
 
     const videoRef = useRef<HTMLVideoElement>(null);
+    const overlayRef = useRef<HTMLDivElement>(null);
 
         useGSAP(() => {
             ScrollTrigger.normalizeScroll(true);
@@ -31,6 +32,7 @@ const Hero = () => {
             gsap.set(text.chars, { opacity: 0, y: -50 });
             gsap.set(".bodyUp p:nth-of-type(2)", { opacity: 0, x: isMobile ? 60 : 120 });
             gsap.set(".bodyUp p:nth-of-type(3)", { opacity: 0, y: 90 });
+            gsap.set(".heroCta", { opacity: 0, y: 30 });
 
             const video = videoRef.current;
             let entranceDone = false;
@@ -65,6 +67,8 @@ const Hero = () => {
                     .to(".bodyUp p:nth-of-type(1)",      { opacity: 0, y: -120, duration: 2.5 }, 0.2)
                     .to(".bodyUp p:nth-of-type(2)",      { opacity: 0, x: isMobile ? 60 : 120, duration: 3.5 }, 0.4)
                     .to(".bodyUp p:nth-of-type(3)",      { opacity: 0, y: 90, duration: 4 }, 0.6)
+                    .to(".heroCta",                      { opacity: 0, y: 30, duration: 3.5 }, 0.5)
+                    .to(overlayRef.current,              { opacity: 0.15, duration: 2 }, exitTime - 1)
                     .to({}, { duration: video.duration }, exitTime);
             };
 
@@ -92,7 +96,8 @@ const Hero = () => {
                 .to(text.chars, { opacity: 1, y: 0, stagger: 0.04 }, "-=1")
                 .to(".bodyUp p:nth-of-type(1)", { opacity: 1, y: 0 }, "-=1")
                 .to(".bodyUp p:nth-of-type(2)", { opacity: 1, x: 0 }, "-=1")
-                .to(".bodyUp p:nth-of-type(3)", { opacity: 1, y: 0 }, "-=0.8");
+                .to(".bodyUp p:nth-of-type(3)", { opacity: 1, y: 0 }, "-=0.8")
+                .to(".heroCta", { opacity: 1, y: 0 }, "-=0.5");
 
             if (video) {
                 const onMetadata = () => {
@@ -117,7 +122,7 @@ const Hero = () => {
         <section id="hero" className="mx-auto w-full">
             <div id="elements" className="relative z-10 w-full">
             <p className="name">Soluciones web e IA</p>
-            <h2 className="will-fade z-50">¿Estás aprovechando todo el potencial digital de tu negocio?</h2>
+            <h2 className="will-fade z-50 ">¿Estás aprovechando todo el potencial digital de tu negocio?</h2>
             <div className="centroHero">
                 
                 <div className="bloqHeIzda">
@@ -128,14 +133,19 @@ const Hero = () => {
                     <div className='bodyUp'>
                         
                         <p>Te ofrecemos soluciones digitales <br/>diseñadas para crecer contigo.</p>
-                        <p>Somos tu solución más completa: Plataformas SaaS, Webs, optimización SEO, Inteligencia Artificial, Apps Movil y creación de productos digitales.</p>
+                        <p>Plataformas SaaS, Webs dinámicas, optimización SEO, Inteligencia Artificial, Apps móvil, tiendas on-line, creación de productos digitales.</p>
                         <p>Construimos tecnología que impulsa tu negocio.</p>
+                        <div className="heroCta">
+                            <a href="#contact" className="cta-primary">contacta con nuestro equipo →</a>
+                            <a href="#proyectos" className="cta-secondary">Ver proyectos</a>
+                        </div>
                     </div>
                 </div>
             </div>
          
         </div>
         <div className="video">
+            <div ref={overlayRef} className="video-overlay" />
             <video ref={videoRef}
                 src={window.innerWidth <= 768 ? videoHeroMov : videoHero}
                 playsInline 
