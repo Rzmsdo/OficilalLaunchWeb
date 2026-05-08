@@ -27,6 +27,7 @@ const Navbar: React.FC = () => {
                     </li>
                 ))}
             </ul>
+            <a href="#contact" className="navbar-cta" onClick={() => setMenuOpen(false)}>Contacta con nosotros</a>
         </nav>
     );
 };
