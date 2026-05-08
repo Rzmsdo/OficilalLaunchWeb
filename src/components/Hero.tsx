@@ -120,13 +120,14 @@ const Hero = () => {
     return (
     <>
         <section id="hero" className="mx-auto w-full">
+            <h1 className="sr-only">Mandarina Projects — Desarrollo Web, SaaS e Inteligencia Artificial</h1>
             <div id="elements" className="relative z-10 w-full">
             <p className="name">Soluciones web e IA</p>
             <h2 className="will-fade z-50 ">¿Estás aprovechando todo el potencial digital de tu negocio?</h2>
             <div className="centroHero">
                 
                 <div className="bloqHeIzda">
-                    <img src={imgHero} alt="Hero" className="heroImage" />
+                    <img src={imgHero} alt="Equipo Mandarina Projects desarrollando soluciones web e IA" className="heroImage" />
                 </div>
 
                 <div className="bloqHeDcha">
