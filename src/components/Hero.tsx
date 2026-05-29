@@ -81,6 +81,9 @@ const Hero = () => {
                 document.body.style.top = '';
                 window.scrollTo(0, -parseInt(top || '0'));
                 setupScrollVideo();
+                // Recalcular posiciones de todos los ScrollTriggers
+                // después de que Hero añada su pinSpacing al layout
+                //ScrollTrigger.refresh();
             };
 
             const tl = gsap.timeline({
