@@ -1,13 +1,10 @@
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { gsap, ScrollTrigger } from '../lib/gsap';
 import { useGSAP } from "@gsap/react";
 import SplitType from "split-type";
 import videoHero from '../assets/videoHero_kf.mp4';
 import videoHeroMov from '../assets/videoHeroMov_kf.mp4';
 import imgHero from '../assets/imgHero.png';
 import { useRef } from "react";
-
-gsap.registerPlugin(ScrollTrigger);
 
 
 const Hero = () => {
@@ -17,7 +14,8 @@ const Hero = () => {
     const overlayRef = useRef<HTMLDivElement>(null);
 
         useGSAP(() => {
-            ScrollTrigger.normalizeScroll(true);
+            // normalizeScroll eliminado: interceptaba todo el scroll de la página
+            // causando conflictos con el ScrollTrigger de Projects
             const text = new SplitType(".bodyUp p:nth-of-type(1)", { types: 'words,chars' });
 
             // Bloquear scroll durante la animación de entrada (compatible con iOS)
@@ -49,7 +47,7 @@ const Hero = () => {
                     scrollTrigger: {
                         trigger: "#hero",
                         start: "top top",
-                        end: `+=${totalTime * 200}`,
+                        end: `+=${totalTime * 80}`,
                         pin: true,
                         pinSpacing: true,
                         scrub: 1,
@@ -72,25 +70,34 @@ const Hero = () => {
                     .to({}, { duration: video.duration }, exitTime);
             };
 
-            // El pin solo se crea cuando AMBAS condiciones están listas
-            const tryActivateScroll = () => {
-                if (!entranceDone || !metadataReady) return;
-                // Restaurar scroll — método compatible iOS
+            // Desbloquear scroll y refrescar posiciones — siempre al terminar la entrada
+            const unlockScroll = () => {
                 const top = document.body.style.top;
                 document.body.classList.remove('scroll-locked');
                 document.body.style.top = '';
                 window.scrollTo(0, -parseInt(top || '0'));
+                // Un frame para que el DOM se estabilice antes de recalcular
+                requestAnimationFrame(() => {
+                    ScrollTrigger.refresh();
+                });
+            };
+
+            // Setup del scroll de video — solo cuando el video está listo
+            const trySetupVideo = () => {
+                if (!entranceDone || !metadataReady) return;
                 setupScrollVideo();
-                // Recalcular posiciones de todos los ScrollTriggers
-                // después de que Hero añada su pinSpacing al layout
-                //ScrollTrigger.refresh();
+                // Segundo refresh tras añadir el pin del Hero
+                requestAnimationFrame(() => {
+                    ScrollTrigger.refresh();
+                });
             };
 
             const tl = gsap.timeline({
                 defaults: { ease: "power2.out", duration: 1 },
                 onComplete: () => {
                     entranceDone = true;
-                    tryActivateScroll();
+                    unlockScroll();    // siempre desbloquear
+                    trySetupVideo();   // video scroll si ya está listo
                 }
             });
 
@@ -106,7 +113,7 @@ const Hero = () => {
                 const onMetadata = () => {
                     if (!video.duration || !isFinite(video.duration)) return;
                     metadataReady = true;
-                    tryActivateScroll();
+                    trySetupVideo();   // si la entrada ya terminó, activa ahora
                 };
 
                 if (video.readyState >= 1) {

@@ -458,7 +458,7 @@ code {
 }
 
 #proyectos  {
-        @apply flex-center flex-col min-h-dvh p-5 mt-20 relative radial-gradient;
+        @apply flex-center flex-col min-h-dvh p-5 radial-gradient;
 
         h2 {
             @apply relative flex-top text-3xl sm:text-4xl md:text-[4vw] lg:text-[8vw] leading-tight md:leading-none md:text-nowrap text-[#505050] mb-8;
