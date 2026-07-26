@@ -458,10 +458,9 @@ code {
 }
 
 #proyectos  {
-        @apply flex-center flex-col min-h-dvh p-5 radial-gradient;
-
+        @apply flex-center flex-col p-3 radial-gradient;
         h2 {
-            @apply relative flex-top text-3xl sm:text-4xl md:text-[4vw] lg:text-[8vw] leading-tight md:leading-none md:text-nowrap text-[#505050] mb-8;
+            @apply relative flex-top text-3xl sm:text-4xl md:text-[4vw] lg:text-[8vw] leading-tight md:leading-none md:text-nowrap text-[#505050] mb-2;
         }
 
         .content {
@@ -469,10 +468,62 @@ code {
         }
 
         .app-img {
-            /* mobile: in-flow, centrado */
-            @apply w-4/5 max-w-xs h-52 sm:h-64 rounded-3xl overflow-hidden mx-auto;
-            /* desktop: absolute centrado en .content */
-            @apply md:absolute md:max-w-none md:w-[38%] md:h-[70vh] md:top-[35%] md:-translate-y-1/2 md:left-1/2 md:-translate-x-1/2 md:mx-0;
+            /* desktop only (hidden md:block en JSX) — GSAP controla xPercent/yPercent/x */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 13vw;
+            height: auto;
+            display: flex;
+            flex-direction: column;
+            border-radius: 1.5rem;
+            overflow: hidden;
+
+            img { flex: 1; min-height: 0; }
+        }
+
+        .back-img, .panel-img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 23vw;
+            height: auto;
+            display: flex;
+            flex-direction: column;
+            border-radius: 1rem;
+            overflow: hidden;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow:
+                0 8px 32px rgba(0,0,0,0.35),
+                0 1px 0 rgba(255,255,255,0.08) inset;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+
+            img {
+                flex: 1;
+                min-height: 0;
+                border-radius: 0.75rem 0.75rem 0 0;
+            }
+
+            p {
+                padding: 0.5rem 0.75rem 0.65rem;
+                font-size: 0.75rem;
+                font-weight: 600;
+                text-align: center;
+                background: rgba(255,255,255,0.06);
+                border-top: 1px solid rgba(255,255,255,0.08);
+                letter-spacing: 0.03em;
+            }
+        }
+
+        .flecha-imgI, .flecha-imgD {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 8vw;
+            height: 8vw;
+            overflow: hidden;
         }
 
         .masked-container {

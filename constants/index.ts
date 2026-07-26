@@ -61,7 +61,7 @@ const descripFreso: DescripFreso[] = [
 	{
 		id: 2,
 		title: "Recetas y comunidad FRESCO",
-		description: "Cada producto viene con receta o sugerencia de uso además, creamos comunidad con otros usuarios para compartir experiencias, consejos culinarios o trucos de uso. Comentarios revisados por nuestro equipo.",
+		description: "Cada producto le adjuntamos una receta o sugerencia de uso, además creamos comunidad con otros usuarios para compartir experiencias, consejos culinarios o trucos de uso. Comentarios revisados por nuestro equipo.",
 	},
 	{
 		id: 3,
