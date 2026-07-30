@@ -34,13 +34,18 @@ const Hero = () => {
 
             const video = videoRef.current;
             let entranceDone = false;
-            let metadataReady = false;
+            let scrollVideoSetup = false;
 
             const setupScrollVideo = () => {
-                if (!video || !video.duration || !isFinite(video.duration)) return;
+                // Use actual video duration when available; fall back to 8 s so the
+                // pin-spacer is always created on entrance completion even if the
+                // video hasn't loaded yet (fixes Projects trigger start position).
+                const videoDuration = (video && video.duration && isFinite(video.duration))
+                    ? video.duration
+                    : 8;
 
                 const exitTime = 4;
-                const totalTime = exitTime + video.duration;
+                const totalTime = exitTime + videoDuration;
                 const exitRatio = exitTime / totalTime;
 
                 const exitTl = gsap.timeline({
@@ -52,6 +57,7 @@ const Hero = () => {
                         pinSpacing: true,
                         scrub: 1,
                         onUpdate: (self) => {
+                            if (!video || !video.duration || !isFinite(video.duration)) return;
                             const videoProgress = Math.max(0, (self.progress - exitRatio) / (1 - exitRatio));
                             video.currentTime = videoProgress * video.duration;
                         },
@@ -67,7 +73,7 @@ const Hero = () => {
                     .to(".bodyUp p:nth-of-type(3)",      { opacity: 0, y: 90, duration: 4 }, 0.6)
                     .to(".heroCta",                      { opacity: 0, y: 30, duration: 3.5 }, 0.5)
                     .to(overlayRef.current,              { opacity: 0.15, duration: 2 }, exitTime - 1)
-                    .to({}, { duration: video.duration }, exitTime);
+                    .to({}, { duration: videoDuration }, exitTime);
             };
 
             // Desbloquear scroll y refrescar posiciones — siempre al terminar la entrada
@@ -82,11 +88,13 @@ const Hero = () => {
                 });
             };
 
-            // Setup del scroll de video — solo cuando el video está listo
+            // Crea el pin del Hero y refresca ScrollTrigger — solo una vez,
+            // en cuanto la entrada termina (no espera al video).
             const trySetupVideo = () => {
-                if (!entranceDone || !metadataReady) return;
+                if (!entranceDone || scrollVideoSetup) return;
+                scrollVideoSetup = true;
                 setupScrollVideo();
-                // Segundo refresh tras añadir el pin del Hero
+                // Refresh tras añadir el pin del Hero
                 requestAnimationFrame(() => {
                     ScrollTrigger.refresh();
                 });
@@ -96,8 +104,8 @@ const Hero = () => {
                 defaults: { ease: "power2.out", duration: 1 },
                 onComplete: () => {
                     entranceDone = true;
-                    unlockScroll();    // siempre desbloquear
-                    trySetupVideo();   // video scroll si ya está listo
+                    trySetupVideo();   // pin del Hero PRIMERO (el spacer debe existir antes de restaurar el scroll)
+                    unlockScroll();    // luego desbloquear
                 }
             });
 
@@ -112,8 +120,7 @@ const Hero = () => {
             if (video) {
                 const onMetadata = () => {
                     if (!video.duration || !isFinite(video.duration)) return;
-                    metadataReady = true;
-                    trySetupVideo();   // si la entrada ya terminó, activa ahora
+                    trySetupVideo();   // si la entrada ya terminó y el pin no se creó aún, actívalo ahora
                 };
 
                 if (video.readyState >= 1) {
