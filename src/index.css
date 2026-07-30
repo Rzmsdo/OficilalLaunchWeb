@@ -460,11 +460,15 @@ code {
 #proyectos  {
         @apply flex-center flex-col p-3 radial-gradient;
         h2 {
-            @apply relative flex-top text-3xl sm:text-4xl md:text-[4vw] lg:text-[8vw] leading-tight md:leading-none md:text-nowrap text-[#505050] mb-2;
+            /* Texto decorativo de fondo — fuera del flujo para no consumir altura en móvil */
+            @apply absolute inset-x-0 pointer-events-none flex-top text-3xl sm:text-4xl md:text-[4vw] lg:text-[8vw] leading-tight md:leading-none md:text-nowrap text-[#505050];
+            top: 50%;
+            transform: translateY(-50%);
         }
 
         .content {
-            @apply relative flex flex-col gap-5 md:flex-row md:justify-between md:mb-5;
+            /* flex-row en todos los tamaños: textoP y textoA siempre en columnas paralelas */
+            @apply relative flex gap-3 md:gap-5 md:justify-between md:mb-5;
         }
 
         .app-img {

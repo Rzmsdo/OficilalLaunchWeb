@@ -35,6 +35,10 @@ useGSAP(() => {
     const isMobile = window.innerWidth < 768;
     const xOut = isMobile ? '105vw' : '65vw';
 
+    // Estado inicial: textos fuera de pantalla (listos para entrar)
+    gsap.set(textoP, { x: `-${xOut}`, opacity: 0 }); // entra desde la izquierda
+    gsap.set(textoA, { x: xOut,        opacity: 0 }); // entra desde la derecha
+
     // Desktop: GSAP toma control de los transforms — todos parten en el centro (left:50%)
     if (!isMobile) {
         gsap.set(appImg, { xPercent: -50, yPercent: -50, x: 0 });
@@ -52,27 +56,31 @@ useGSAP(() => {
         }
     });
 
-    // Fase 1 (0–0.5): pausa de lectura
-    // Fase 2 (0.5–1.5): textos salen hacia los lados
-    tl.fromTo(textoP, { x: 0, opacity: 1 }, { x: `-${xOut}`, opacity: 0, ease: 'none', duration: 1 }, 0.5)
-      .fromTo(textoA, { x: 0, opacity: 1 }, { x: xOut,        opacity: 0, ease: 'none', duration: 1 }, 0.5);
+    // Fase 1 (0–0.5): textoP y textoA entran desde los lados
+    tl.to(textoP, { x: 0, opacity: 1, ease: 'none', duration: 0.5 }, 0)
+      .to(textoA, { x: 0, opacity: 1, ease: 'none', duration: 0.5 }, 0);
 
-    // Fase 3 (2–3): solo desktop — app-img se desplaza a la derecha, resto entra desde la izquierda
+    // Fase 2 (0.5–1.5): pausa de lectura (sin tweens)
+
+    // Fase 3 (1.5–2.5): textoP y textoA salen hacia los lados
+    tl.to(textoP, { x: `-${xOut}`, opacity: 0, ease: 'none', duration: 1 }, 3)
+      .to(textoA, { x: xOut,        opacity: 0, ease: 'none', duration: 1 }, 3);
+
+    // Fase 4 (3–4): solo desktop — app-img se desplaza a la derecha, resto entra desde la izquierda
     // Orden final: panelImg | flechaIImg | codImg | flechaDImg | appImg
-    // Gap uniforme de 1.5vw entre bordes de cada imagen
     if (!isMobile) {
-        tl.to(appImg,     { x: '34vw',  ease: 'none', duration: 1 }, 2)
-          .to(flechaDImg, { x: '22vw',  opacity: 1, ease: 'none', duration: 1 }, 2)
-          .to(codImg,     { x: '5vw',   opacity: 1, ease: 'none', duration: 1 }, 2)
-          .to(flechaIImg, { x: '-12vw', opacity: 1, ease: 'none', duration: 1 }, 2)
-          .to(panelImg,   { x: '-29vw', opacity: 1, ease: 'none', duration: 1 }, 2);
+        tl.to(appImg,     { x: '34vw',  ease: 'none', duration: 1 }, 3)
+          .to(flechaDImg, { x: '22vw',  opacity: 1, ease: 'none', duration: 1 }, 3)
+          .to(codImg,     { x: '5vw',   opacity: 1, ease: 'none', duration: 1 }, 3)
+          .to(flechaIImg, { x: '-12vw', opacity: 1, ease: 'none', duration: 1 }, 3)
+          .to(panelImg,   { x: '-29vw', opacity: 1, ease: 'none', duration: 1 }, 3);
     }
 });
 
     return (
-        <div ref={wrapperRef} style={{ height: 'calc(100dvh + 1100px)' }}>
+        <div ref={wrapperRef} style={{ height: 'calc(100dvh + 1500px)' }}>
             <div id="proyectos" className="sticky top-0 h-dvh w-full overflow-hidden">
-                <div className='bg-gray-500/20 rounded-2xl md:mb-3 px-10 py-1 mt-4'>
+                <div className='bg-gray-500/20 rounded-2xl md:mb-3 px-10 py-1 mt-10'>
                     <h3 className='text-center font-semibold TextoId'>Sistema de fidelizacion de clientes FRESCO</h3>
                 </div>
                 <div className="container mx-auto h-full pt-2">
@@ -110,7 +118,7 @@ useGSAP(() => {
                         </div>
 
                     </div>
-                    <div className='text-base flex flex-col items-center mt-30 px-2 relative z-10'>
+                    <div className='text-base flex flex-col items-center md:mt-5 xl:mt-30 px-2 relative z-10'>
                         <p className="pb-5 text-xl">Sistema adaptable a cualquier tipo de negocio</p>
                         <a
                             href="https://mandarina.com/soluciones"
